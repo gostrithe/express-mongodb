@@ -1,30 +1,32 @@
 const express = require('express');
 const path = require('path');
 const MongoClient = require("mongodb").MongoClient;
-MongoClient.connect()
-// const multer = require('multer');
+
+const multer = require('multer');
 
 const { process_get } = require('../rooter/process_get');
+const { process_post } = require('../rooter/process_post');
 
 // Creates an Express application.
 const expressApp = express();
-
-console.log(path.resolve());
 //访问/接口发送get请求，执行回调，发送响应
 // Send a response.
 expressApp.get('/', (request, response) => { response.send('hello, express!'); });
 
 //使用内置中间件  根据请求头Content-Type解析编码匹配响应体类型
-expressApp.use(express.urlencoded({extended: false}))
+expressApp.use(express.urlencoded({ extended: false }));
+expressApp.use(multer({ dest: 'D:/桌面/express-mongoDB/express-mongodb-server/tmp' }).array('image'));
+
 
 /* 路由 */
 // 路由决定了由谁(指定脚本)去响应客户端请求。
 expressApp.get('/index.html', (req, res) => {
     // res.sendFile('D:\\桌面\\express-mongoDB\\express-mongodb-server\\index.html');
-    res.sendFile(path.resolve() + '/index.html')
+    res.sendFile(path.resolve() + '/index.html');
 });
 expressApp.get('/process_get', process_get);
-expressApp.post('/process_post',);
+
+expressApp.post('/process_post', process_post);
 
 
 expressApp.get('/list_user', (req, res) => {

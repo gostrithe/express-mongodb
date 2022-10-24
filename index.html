@@ -21,6 +21,14 @@
         Last Name: <input type="text" name="last_name">
         <input type="submit" value="Submit">
     </form>
+    
+    <h3>文件上传：</h3>
+    选择一个文件上传: <br />
+    <form action="/process_post" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" size="50" />
+        <br />
+        <input type="submit" value="上传文件" />
+    </form>
 </body>
 
 </html>
