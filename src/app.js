@@ -13,9 +13,9 @@ const fileRouter = require('./view/router/fileRouter');
 const app = express();
 /* 配置中间件 */
 // only parses json and only looks at requests where the Content-Type header matches the type option.
-// app.use(express.json());
+app.use(express.json());
 // only parses urlencoded bodies and only looks at requests where the Content-Type header matches the type option
-// app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
 // 处理静态资源
 // 如http://127.0.0.1:8001/img/huya.webp 即可直接访问到资源
 app.use(express.static(path.resolve('public')));  //D:\桌面\express-mongoDB\express-mongodb-server\public
