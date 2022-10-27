@@ -5,7 +5,7 @@ const URL = 'mongodb://localhost:27017';
 const dbName = 'my-server';
 
 
-async function getCollection(dbName, collectionName) {
+function getCollection(dbName, collectionName) {
     return MongoClient.connect(URL)  // 连接到客户端
         .then(
             client => {
@@ -28,45 +28,61 @@ async function getCollection(dbName, collectionName) {
 
 
 // Create 在哪个collection中add data
-async function CREATE(collectionName, data) {
+function CREATE(collectionName, data) {
+    let CREATEclient = null;
     return getCollection(dbName, collectionName)
         .then(
-            ({ collection, client }) => collection.insertOne(data)
-                .then(
-                    insertOneResult => {
-                        console.log('集合添加数据成功');
-                        return insertOneResult;
-                    },
-                    err => {
-                        console.log('集合添加数据失败');
-                        return err;
-                    }
-                ).finally(
-                    client.close()
-                )
+            ({ collection, client }) => {
+                CREATEclient = client;
+                return collection.insertOne(data);
+            }
+        )
+        .then(
+            insertOneResult => {
+                console.log('集合添加数据成功');
+                return insertOneResult;
+            },
+            err => {
+                console.log('集合添加数据失败');
+                return err;
+            }
         ).catch(
             err => err
+        ).finally(
+            () => {
+                // Close the db and its underlying connections
+                console.log('Close the db and its underlying connections');
+                CREATEclient.close();
+            }
         );
 }
 // RETRIEVE
-async function RETRIEVE(collectionName, whereOptions) {
+function RETRIEVE(collectionName, whereOptions) {
+    let RETRIEVEclient = null;
     return getCollection(dbName, collectionName)
         .then(
-            ({ collection, client }) => collection.find(whereOptions).toArray()
-                .then(
-                    arr => {
-                        console.log('查询数据库成功', arr);
-                        return arr;
-                    },
-                    err => {
-                        console.log('查询数据库失败', err);
-                        return err;
-                    }
-                ).finally(
-                    client.close()
-                )
+            ({ collection, client }) => {
+                RETRIEVEclient = client;
+                return collection.find(whereOptions).toArray();
+            }
+        )
+        .then(
+            arr => {
+                console.log('查询数据库成功', arr);
+                return arr;
+            },
+            err => {
+                console.log('查询数据库失败', err);
+                return err;
+            }
         ).catch(
             err => err
+        ).finally(
+            () => {
+                // Close the db and its underlying connections
+                console.log('Close the db and its underlying connections');
+                RETRIEVEclient.close();
+            }
         );
 
 
