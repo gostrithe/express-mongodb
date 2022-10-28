@@ -9,6 +9,8 @@ const indexRouter = require('./view/router/indexRouter');
 const userRouter = require('./view/router/userRouter');
 const fileRouter = require('./view/router/fileRouter');
 
+const movieRouter = require('./view/router/movieRouter');
+
 // Creates an Express application. 
 const app = express();
 /* 配置中间件 */
@@ -25,6 +27,8 @@ app.use(multer({ dest: path.resolve('tmp') }).array('aFieldName'));  //array里�
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.post('/file_upload', fileRouter);
+
+app.use('/movie', movieRouter);
 
 // 将应用实例app挂载监听在8002端口
 const server = app.listen(

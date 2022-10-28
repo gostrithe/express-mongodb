@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+
 /* mongoDB的增删改查CRUD */
 const MongoClient = require('mongodb').MongoClient;  // MongoDB客户端实例
 // 连接MongoDB部署的url, 连接到客户端的url
@@ -68,11 +70,11 @@ function RETRIEVE(collectionName, whereOptions) {
         )
         .then(
             arr => {
-                console.log('查询数据库成功', arr);
+                console.log('查询数据成功', arr);
                 return arr;
             },
             err => {
-                console.log('查询数据库失败', err);
+                console.log('查询数据失败', err);
                 return err;
             }
         ).catch(
@@ -88,12 +90,56 @@ function RETRIEVE(collectionName, whereOptions) {
 
 }
 // UPDATE
-function UPDATE(params) {
-
+function UPDATE(collectionName, id, data) {
+    let RETRIEVEclient = null;
+    return getCollection(dbName, collectionName)
+        .then(
+            ({ collection, client }) => {
+                RETRIEVEclient = client;
+                return collection.updateOne(
+                    { _id: new ObjectId(id) },
+                    { $set: data }
+                );
+            },
+            err => err
+        )
+        .then(
+            updateResult => {
+                console.log('更新数据成功');
+                return updateResult;
+            },
+            err => {
+                console.log('更新数据失败');
+                return err;
+            }
+        )
 }
 // DELETE
-function DELETE(params) {
-
+function DELETE(collectionName, id) {
+    let RETRIEVEclient = null;
+    return getCollection(dbName, collectionName)
+        .then(
+            ({ collection, client }) => {
+                RETRIEVEclient = client;
+                return collection.deleteOne({ _id: new ObjectId(id) });
+            },
+            err => err
+        )
+        .then(
+            deleteResult => {
+                console.log('删除数据成功');
+                return deleteResult;
+            },
+            err => {
+                console.log('删除数据失败');
+                return err;
+            }
+        ).finally(
+            () => {
+                console.log('Close the db and its underlying connections');
+                RETRIEVEclient.close();
+            }
+        );
 }
 
 module.exports = {
