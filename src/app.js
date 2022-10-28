@@ -11,6 +11,8 @@ const fileRouter = require('./view/router/fileRouter');
 
 const movieRouter = require('./view/router/movieRouter');
 
+const RouterGenerator = require('./view/routerGenerator')
+
 // Creates an Express application. 
 const app = express();
 /* 配置中间件 */
@@ -29,6 +31,9 @@ app.use('/user', userRouter);
 app.post('/file_upload', fileRouter);
 
 app.use('/movie', movieRouter);
+
+/* 上面的router中间键MVC分层太烦了，直接封装一个类，生成router中间件，一行代码解决 */
+app.use('/cinema', RouterGenerator.from('cinema').generate())
 
 // 将应用实例app挂载监听在8002端口
 const server = app.listen(

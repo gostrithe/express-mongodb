@@ -47,12 +47,16 @@ router.post('/login', async (req, res) => {
     res.send(`
         <h1>${result.massege || result}</h1>
 
-        电影名：<input id="mname" type="text" name="name"><br>
-        导演<input id="director" type="text" name="director"><br>
-        <input id="addBtn" type="submit" value="添加">
+        ${
+            result.massege == '登录成功' ? 
+            `电影名：<input id="mname" type="text" name="name"><br>
+            导演<input id="director" type="text" name="director"><br>
+            <input id="addBtn" type="submit" value="添加">
+            <a href="/movie/all">查询全部电影</a>`
+            :
+            `<div></div>`
+        }
         
-        <a href="/movie/all">查询全部电影</a>
-
         <script>
             const token = '${result.token}';
             console.log(token)
